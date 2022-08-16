@@ -1,8 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './SignIn.css'
 
 
-const SignIn = ({ onClick }) => {
+const SignIn = ({ onClick, loadUser }) => {
+    const [signInEmail, setSignInEmail] = useState('');
+    const [siginInPassword, setSignInPassword] = useState('');
+
+    const onEmailChange = (event) => {
+      setSignInEmail(event.target.value)
+    };
+
+    const onPasswordChange = (event) => {
+      setSignInPassword(event.target.value)
+    };
+
+    const onSubmit = () => {
+      fetch('http://localhost:3000/signin', {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          email: signInEmail,
+          password: siginInPassword
+        })
+      })
+        .then(response => response.json())
+        .then(user => {
+          if (user.id) {
+            loadUser(user)
+            onClick('home')
+          }
+        })
+    };
+
     return (
         <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
           <main className="pa4 black-80">
@@ -12,25 +41,27 @@ const SignIn = ({ onClick }) => {
                 <div className="mt3">
                   <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
                   <input
-                    className="pa2 input-reset ba w-100 bg-transparent"
+                    className="pa2 input-reset ba w-100"
                     type="email"
                     name="email-address"
                     id="email-address"
+                    onChange={onEmailChange}
                   />
                 </div>
                 <div className="mv3">
                   <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
                   <input
-                    className="b pa2 input-reset ba bg-transparent w-100"
+                    className="b pa2 input-reset ba w-100"
                     type="password"
                     name="password"
                     id="password"
+                    onChange={onPasswordChange}
                   />
                 </div>
               </fieldset>
               <div className="">
                 <input
-                  onClick={() => onClick('home')}
+                  onClick={onSubmit}
                   className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
                   type="submit"
                   value="Sign in"
