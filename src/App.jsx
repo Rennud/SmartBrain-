@@ -34,7 +34,7 @@ const particlesOptions = {
       },
       repulse: {
         distance: 200,
-        duration: 1,
+        duration: 10,
       },
     },
   },
@@ -141,7 +141,6 @@ function App() {
 
 
   const displayFaceBox = (box) => {
-    console.log(box)
     setBox(box)}
 
 
